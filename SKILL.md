@@ -217,14 +217,28 @@ React + Tailwind + Framer Motion
 - Framer Motion 处理复杂动画
 - 适合 3-5 个场景的视频
 
-### 专业方案
+### 专业方案 A — HyperFrames（推荐，Agent 优先）
+
+```
+HyperFrames（HTML-native 视频框架，HeyGen 开源）
+```
+- **Write HTML. Render video.** — 直接写 HTML + data-* 属性
+- `npx hyperframes render` 直接出 MP4，**无需手动录屏**
+- 确定性渲染：相同输入 = 完全相同输出，适合批量生产
+- 支持 GSAP / Anime.js / Lottie / Three.js / CSS / WAAPI 动画引擎
+- 内置 TTS 配音、字幕同步（`/hyperframes-media`）
+- 50+ 现成 block：shader 转场、社交 overlay、数据图表
+- 适合 agent 驱动的全自动视频生产
+- 可配合 `hyperframes` / `hyperframes-cli` / `gsap` 系列 Skill 使用
+
+### 专业方案 B — Remotion（React 技术栈）
 
 ```
 Remotion（React 视频框架）
 ```
 - 代码即视频，直接渲染 MP4
-- 精确帧控制
-- 适合批量生产、模板化视频
+- 精确帧控制，React 组件化
+- 适合已有 React 技术积累的团队
 - 可配合 `remotion-*` 系列 Skill 使用
 
 ---
@@ -234,11 +248,14 @@ Remotion（React 视频框架）
 ```
 vsl-storyboard-writer  →  提供脚本分镜（Step 1）
          ↓
-codex-video-workflow   →  视觉预览 + 代码复刻（Step 2-5）
+codex-video-workflow   →  视觉预览 + 代码复刻（Step 2-4）
          ↓
-frontend-slides        →  如果是演示文稿形式的视频
-huashu-design          →  如果需要高保真原型动画
-remotion-*             →  如果选择 Remotion 技术栈
+hyperframes            →  Step 3 执行引擎（HTML → 直接 render MP4）
+hyperframes-media      →  TTS 配音 + 字幕（可选）
+         ↓
+frontend-slides        →  如果是演示文稿形式（可再转视频）
+guizang-ppt-skill      →  如果是杂志风 PPT（HTML → HyperFrames render）
+remotion-*             →  如果选择 React/Remotion 技术栈
 ```
 
 ---

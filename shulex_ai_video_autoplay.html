@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shulex AI Video</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; color: white; }
+        
+        .scene {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; opacity: 0; visibility: hidden;
+        }
+
+        /* Scene 1: The Problem */
+        #scene1 { background: #17181f; opacity: 1; visibility: visible; } /* Make visible immediately */
+        .inbox { width: 50%; height: 100%; padding: 40px; background: #1e1e24; border-right: 1px solid #333; }
+        .ticket { background: #2a2a32; border-left: 4px solid #e11d48; padding: 20px; margin-bottom: 20px; border-radius: 4px; opacity: 0; transform: translateX(-50px); }
+        .ticket-header { display: flex; justify-content: space-between; color: #a1a1aa; font-size: 14px; margin-bottom: 10px; }
+        .ticket-title { font-weight: 600; font-size: 18px; }
+        .problem-text { width: 50%; display: flex; flex-direction: column; justify-content: center; padding: 80px; }
+        .problem-title { font-size: 72px; font-weight: 800; line-height: 1.1; margin-bottom: 40px; opacity: 0; }
+        .problem-stat { font-size: 32px; color: #a1a1aa; opacity: 0; }
+        .problem-number { font-size: 120px; font-weight: 800; color: #e11d48; }
+
+        /* Scene 2: The Solution */
+        #scene2 { background: #0f172a; flex-direction: column; align-items: center; justify-content: center; }
+        .solution-title { font-size: 64px; font-weight: 800; margin-bottom: 60px; opacity: 0; transform: translateY(-30px); }
+        .ai-avatar { width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, #0ea5e9 0%, #0284c7 100%); box-shadow: 0 0 50px rgba(14, 165, 233, 0.5); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin-bottom: 40px; opacity: 0; scale: 0.5; }
+        .active-ticket { background: #1e293b; padding: 30px; border-radius: 12px; width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid #334155; position: relative; opacity: 0; transform: translateY(50px); }
+        .resolved-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(3); background: #22c55e; color: white; padding: 10px 30px; border-radius: 4px; font-weight: 800; font-size: 32px; letter-spacing: 2px; opacity: 0; box-shadow: 0 0 30px rgba(34, 197, 94, 0.4); }
+
+        /* Scene 3: The Result */
+        #scene3 { background: #0a0f1d; align-items: center; justify-content: center; gap: 80px; }
+        .chart-container { position: relative; width: 400px; height: 400px; opacity: 0; }
+        .donut { width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(#00f2fe 0%, #00f2fe 0%, #1e293b 0%); display: flex; align-items: center; justify-content: center; }
+        .donut-inner { width: 320px; height: 320px; border-radius: 50%; background: #0a0f1d; display: flex; align-items: center; justify-content: center; font-size: 80px; font-weight: 800; }
+        .result-text { width: 500px; }
+        .result-title { font-size: 80px; font-weight: 800; line-height: 1; margin-bottom: 20px; opacity: 0; transform: translateX(30px); }
+        .result-subtitle { font-size: 32px; color: #94a3b8; opacity: 0; }
+
+        .hint {
+            position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 20px; color: #fff; z-index: 100; opacity: 0.8;
+        }
+    </script>
+</head>
+<body>
+    <div class="hint">🎬 演示视频加载中，请稍候...（视频会自动播放并循环）</div>
+
+    <!-- Scene 1: Problem -->
+    <div id="scene1" class="scene">
+        <div class="inbox"></div>
+        <div class="problem-text">
+            <div class="problem-title">Support tickets<br>piling up?</div>
+            <div class="problem-stat">Avg Response:<br><span class="problem-number">8 hrs</span></div>
+        </div>
+    </div>
+
+    <!-- Scene 2: Solution -->
+    <div id="scene2" class="scene">
+        <div class="solution-title">Meet your new top performer</div>
+        <div class="ai-avatar">Shulex AI</div>
+        <div class="active-ticket">
+            <div class="ticket-header"><span>#SX7892 - Alex Thompson</span><span>Oct 14, 14:32</span></div>
+            <div class="ticket-title" style="margin-bottom: 10px;">Order Tracking Issue</div>
+            <div style="color: #94a3b8; margin-bottom: 30px;">Where is my package? The tracking link is broken!</div>
+            <div class="resolved-badge">RESOLVED</div>
+        </div>
+    </div>
+
+    <!-- Scene 3: Result -->
+    <div id="scene3" class="scene">
+        <div class="chart-container">
+            <div class="donut" id="donut-chart"><div class="donut-inner"><span id="counter">0</span>%</div></div>
+        </div>
+        <div class="result-text">
+            <div class="result-title">95%<br>Automation</div>
+            <div class="result-subtitle">Instant responses, 24/7</div>
+        </div>
+    </div>
+
+    <script>
+        const inbox = document.querySelector('.inbox');
+        for(let i=0; i<6; i++) {
+            inbox.innerHTML += `<div class="ticket"><div class="ticket-header"><span>#873${4+i} - Frustrated User</span><span>${i+1}d ago</span></div><div class="ticket-title">URGENT: Broken feature!</div></div>`;
+        }
+
+        const tl = gsap.timeline({ repeat: -1 }); // Infinite loop
+
+        // Wait 1 second before starting
+        tl.to('.hint', { opacity: 0, duration: 0.5, delay: 1 })
+        
+        // SCENE 1
+        tl.to('.problem-title', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, "<")
+          .to('.ticket', { opacity: 1, x: 0, duration: 0.4, stagger: 0.1, ease: 'back.out(1.7)' }, "-=0.5")
+          .to('.problem-stat', { opacity: 1, duration: 1 })
+          .to('#scene1', { autoAlpha: 0, duration: 0.5, delay: 2 }); 
+
+        // SCENE 2
+        tl.set('#scene2', { autoAlpha: 1 })
+          .to('.ai-avatar', { opacity: 1, scale: 1, duration: 1, ease: 'elastic.out(1, 0.5)' })
+          .to('.solution-title', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, "-=0.5")
+          .to('.active-ticket', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' })
+          .to('.resolved-badge', { opacity: 1, scale: 1, duration: 0.5, ease: 'bounce.out', delay: 0.5 })
+          .to('#scene2', { autoAlpha: 0, duration: 0.5, delay: 2 }); 
+
+        // SCENE 3
+        tl.set('#scene3', { autoAlpha: 1 })
+          .to('.chart-container', { opacity: 1, duration: 0.5 })
+          .to('.result-title', { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' })
+          .to('.result-subtitle', { opacity: 1, duration: 0.8 }, "-=0.4")
+          .to({val: 0}, {
+              val: 95, 
+              duration: 2, 
+              ease: 'power2.inOut',
+              onUpdate: function() {
+                  document.getElementById('counter').innerText = Math.round(this.targets()[0].val);
+                  let deg = (Math.round(this.targets()[0].val) / 100) * 360;
+                  document.getElementById('donut-chart').style.background = \`conic-gradient(#00f2fe 0deg, #00f2fe \${deg}deg, #1e293b \${deg}deg)\`;
+              }
+          }, "-=0.5")
+          .to('#scene3', { autoAlpha: 0, duration: 0.5, delay: 3 }); // Fade out before loop
+          
+    </script>
+</body>
+</html>
